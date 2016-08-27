@@ -20,6 +20,7 @@
 		<jetty.version>7.6.14.v20131031</jetty.version>
 		<commons.io.version>2.5</commons.io.version>
 		<commons.codec.version>1.10</commons.codec.version>
+		<qiniu.version>7.1.2</qiniu.version>
 
 		<!-- Plugin的属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -163,6 +164,13 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
+		</dependency>
+
+		<!-- QiNiu -->
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>${qiniu.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
