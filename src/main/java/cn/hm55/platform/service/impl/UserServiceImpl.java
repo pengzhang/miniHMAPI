@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 			.addParameter("username", username)
 			.addParameter("password", DigestUtils.md5Hex(password + salt))
 			.addParameter("salt", salt)
-			.executeUpdate();
+			.executeUpdate().commit();
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();

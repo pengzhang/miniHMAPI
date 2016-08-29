@@ -23,9 +23,9 @@
 		<!-- Connection Info -->
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://127.0.0.1:3306/mtedu_app?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true" />
+			value="jdbc:mysql://115.29.106.112:3306/platform?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true" />
 		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="password" value="qixin123456" />
 
 		<!-- Connection Pooling Info -->
 		<property name="maxActive" value="50" />
