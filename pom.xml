@@ -19,6 +19,7 @@
 		<jedis.version>2.7.2</jedis.version>
 		<jetty.version>7.6.14.v20131031</jetty.version>
 		<commons.io.version>2.5</commons.io.version>
+		<commons.lang.version>3.4</commons.lang.version>
 		<commons.codec.version>1.10</commons.codec.version>
 		<qiniu.version>7.1.2</qiniu.version>
 
@@ -157,6 +158,11 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>${commons.codec.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons.lang.version}</version>
 		</dependency>
 
 		<!-- Log4j -->
