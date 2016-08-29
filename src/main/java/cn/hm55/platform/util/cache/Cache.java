@@ -253,4 +253,41 @@ public class Cache {
 	        }
 	        return result;
 	    }
+	    
+	    public long incr(String key) {
+	        ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+	        long result = 0;
+	        if (shardedJedis == null) {
+	            return result;
+	        }
+	        boolean broken = false;
+	        try {
+	            result = shardedJedis.incr(key);
+	        } catch (Exception e) {
+	            log.error(e.getMessage(), e);
+	            broken = true;
+	        } finally {
+	            redisDataSource.returnResource(shardedJedis, broken);
+	        }
+	        return result;
+	    }
+
+	    public long decr(String key, long startOffset, long endOffset) {
+	        ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+	        long result = 0;
+	        if (shardedJedis == null) {
+	            return result;
+	        }
+	        boolean broken = false;
+	        try {
+	            result = shardedJedis.decr(key);
+
+	        } catch (Exception e) {
+	            log.error(e.getMessage(), e);
+	            broken = true;
+	        } finally {
+	            redisDataSource.returnResource(shardedJedis, broken);
+	        }
+	        return result;
+	    }
 }

@@ -33,8 +33,8 @@ public class UserController {
 	@Path("/info")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserInfo() {
-		cache.set("username", "zp");
-		return cache.get("username")==null?"aa":"bb";
+		cache.incr("times");
+		return cache.get("times")==null?"aa":cache.get("times");
 	}
 
 }
