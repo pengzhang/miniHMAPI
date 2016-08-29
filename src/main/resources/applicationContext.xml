@@ -37,4 +37,27 @@
 	<bean id="sql2o" class="org.sql2o.Sql2o">
 		<constructor-arg ref="dataSource" />
 	</bean>
+	
+	<!-- Jedis 配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal">
+        <value>200</value>
+        </property>
+        <property name="maxIdle">
+         <value>50</value>
+        </property>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+    </bean>
+   
+     <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"  scope="singleton">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg name="host" value="redis://127.0.0.1:6379/0" />
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
 </beans>

@@ -2,7 +2,6 @@ package cn.hm55.platform.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -10,14 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.hm55.platform.service.UserService;
-import cn.hm55.platform.util.Json;
+import cn.hm55.platform.util.cache.Cache;
 
-@Path("/user/1.1")
+@Path("/user")
 @Component
 public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private Cache cache;
 
 	/**
 	 * @api {get} /user/1.1/info/{page} 获取用户信息
@@ -28,10 +30,11 @@ public class UserController {
 	 * @return
 	 */
 	@GET
-	@Path("/info/{page}")
+	@Path("/info")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserInfo(@PathParam("page") int page) {
-		return Json.toJson(userService.getUsers(page)).toString();
+	public String getUserInfo() {
+		cache.set("username", "zp");
+		return cache.get("username")==null?"aa":"bb";
 	}
 
 }
