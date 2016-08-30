@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -43,7 +43,7 @@ public class RequestFilter extends OncePerRequestFilter {
 
 class MAPIHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-	private static Log logger = LogFactory.getLog(MAPIHttpServletRequestWrapper.class);
+	private static Logger logger = LoggerFactory.getLogger(MAPIHttpServletRequestWrapper.class);
 
 	private final byte[] body;
 

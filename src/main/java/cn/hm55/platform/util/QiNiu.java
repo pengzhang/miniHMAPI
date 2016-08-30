@@ -3,8 +3,8 @@ package cn.hm55.platform.util;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.qiniu.common.QiniuException;
@@ -21,7 +21,7 @@ import com.qiniu.util.Auth;
 @Component
 public class QiNiu {
 	
-	private Log log = LogFactory.getLog(QiNiu.class);
+	private Logger log = LoggerFactory.getLogger(QiNiu.class);
 
 	Auth auth = Auth.create(Config.get("qiniu.access_key"), Config.get("qiniu.secret_key"));
 	UploadManager uploadManager = new UploadManager();

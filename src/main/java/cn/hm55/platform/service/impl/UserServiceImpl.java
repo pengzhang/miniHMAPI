@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 		String salt = RandomStringUtils.randomAlphanumeric(5);
 		String sql = "insert into user (username, password, salt) values (:username, :password, :salt)";
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery(sql)
+			conn.createQuery(sql,sql)
 			.addParameter("username", username)
 			.addParameter("password", DigestUtils.md5Hex(password + salt))
 			.addParameter("salt", salt)

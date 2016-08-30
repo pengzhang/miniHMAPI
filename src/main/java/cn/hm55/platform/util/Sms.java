@@ -2,8 +2,8 @@ package cn.hm55.platform.util;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Sms {
 
-	private Log log = LogFactory.getLog(Sms.class);
+	private Logger log = LoggerFactory.getLogger(Sms.class);
 
 	/**
 	 * 群发短信
