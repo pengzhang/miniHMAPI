@@ -5,6 +5,7 @@ public class User {
 	private String username;
 	private String password;
 	private String slat;
+	private int status;   //0:正常,1:删除(暂停),2:待审核,3:永久删除
 	
 	public String getUsername() {
 		return username;
@@ -24,5 +25,13 @@ public class User {
 	public void setSlat(String slat) {
 		this.slat = slat;
 	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	
 
 }

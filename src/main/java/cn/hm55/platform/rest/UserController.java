@@ -43,7 +43,7 @@ public class UserController {
 			boolean flag = userService.register(user.getUsername(), user.getPassword());
 			if (flag) {
 				//注册成功,缓存计用户总数
-//				cache.incr("_user_total");
+				cache.incr("_user_total");
 			}
 			return new RestResponse(1, "注册成功");
 		} catch (ServiceException se) {
