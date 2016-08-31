@@ -43,18 +43,18 @@ public class RequestFilter extends OncePerRequestFilter {
 
 class MAPIHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-	private static Logger logger = LoggerFactory.getLogger(MAPIHttpServletRequestWrapper.class);
+	private static Logger log = LoggerFactory.getLogger(MAPIHttpServletRequestWrapper.class);
 
 	private final byte[] body;
 
 	public MAPIHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
 		body = IOUtils.toByteArray(request.getInputStream());
-		logger.info("=============================================");
-		logger.info("[request method] " + request.getMethod());
-		logger.info("[request url] " + request.getRequestURI());
-		logger.info("[userAgent info]" + request.getHeader("User-Agent"));
-		logger.info("[params]" + new String(body, "UTF8"));
+		log.info("=============================================");
+		log.info("[request method] " + request.getMethod());
+		log.info("[request url] " + request.getRequestURI());
+		log.info("[userAgent info]" + request.getHeader("User-Agent"));
+		log.info("[params]" + new String(body, "UTF8"));
 	}
 
 	@Override

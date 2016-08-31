@@ -2,11 +2,18 @@ package cn.hm55.platform.model;
 
 public class User {
 	
+	private long id;
 	private String username;
 	private String password;
-	private String slat;
+	private String salt;
 	private int status;   //0:正常,1:删除(暂停),2:待审核,3:永久删除
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -19,11 +26,12 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getSlat() {
-		return slat;
+	
+	public String getSalt() {
+		return salt;
 	}
-	public void setSlat(String slat) {
-		this.slat = slat;
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 	public int getStatus() {
 		return status;

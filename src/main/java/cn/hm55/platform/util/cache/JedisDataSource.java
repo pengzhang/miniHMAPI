@@ -10,7 +10,7 @@ import redis.clients.jedis.ShardedJedisPool;
 
 @Repository()
 public class JedisDataSource {
-    private static final Logger LOG = LoggerFactory.getLogger(JedisDataSource.class);
+    private static final Logger log = LoggerFactory.getLogger(JedisDataSource.class);
     
     @Autowired
     private ShardedJedisPool shardedJedisPool;
@@ -21,7 +21,7 @@ public class JedisDataSource {
             shardJedis = shardedJedisPool.getResource();
             return shardJedis;
         } catch (Exception e) {
-            LOG.error("[JedisDS] getRedisClent error:" + e.getMessage());
+            log.error("[JedisDS] getRedisClent error:" + e.getMessage());
             if (null != shardJedis)
                 shardJedis.close();
         }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sql2o.Connection;
@@ -16,6 +18,8 @@ import cn.hm55.platform.util.cache.Cache;
 
 @Component
 public class UserServiceImpl implements UserService {
+	
+	private Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	private Sql2o sql2o;
@@ -25,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean register(String username, String password) throws ServiceException{
+		
+		long start = System.currentTimeMillis();
 		//检查用户名
 		if(getUserByUsername(username) != null){
 			throw new ServiceException("用户名已存在");
@@ -38,6 +44,8 @@ public class UserServiceImpl implements UserService {
 			.addParameter("password", DigestUtils.md5Hex(password + salt))
 			.addParameter("salt", salt)
 			.executeUpdate().commit();
+			long end = System.currentTimeMillis();
+			log.info("execute {} : {}ms", "register", end-start);
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -47,21 +55,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean login(String username, String password) throws ServiceException {
+		
+		long start = System.currentTimeMillis();
 		User user = getUserByUsername(username);
 		if(user == null || user.getStatus()!=0){
 			throw new ServiceException("用户不存在或用户已被删除");
 		}else{
 			//判断密码是否相同
-			if(DigestUtils.md5Hex(password + user.getSlat()).equals(user.getPassword())){
+			if(DigestUtils.md5Hex(password + user.getSalt()).equals(user.getPassword())){
+				long end = System.currentTimeMillis();
+				log.info("execute {} : {}ms", "login", end-start);
 				return true;
 			}else{
 				throw new ServiceException("密码错误");
 			}
 		}
+		
 	}
 
 	@Override
 	public boolean modifyPassword(long userid, String password) throws ServiceException{
+		
+		long start = System.currentTimeMillis();
 		User user = getUser(userid);
 		if(user == null){
 			throw new ServiceException("用户不存在");
@@ -75,6 +90,8 @@ public class UserServiceImpl implements UserService {
 				.addParameter("salt", salt)
 				.addParameter("id", userid)
 				.executeUpdate().commit();
+				long end = System.currentTimeMillis();
+				log.info("execute {} : {}ms", "modifyPassword", end-start);
 				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -85,11 +102,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUser(long userid) throws ServiceException{
+		
+		long start = System.currentTimeMillis();
 		String sql = "select * from user where id=:id";
 		try (Connection conn = sql2o.open()){
-			return conn.createQuery(sql, sql)
+			User user =  conn.createQuery(sql, sql)
 					.addParameter("id", userid)
 					.executeAndFetchFirst(User.class);
+			long end = System.currentTimeMillis();
+			log.info("execute {} : {}ms", "getUser", end-start);
+			return user;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ServiceException("通过用户ID获取用户失败");
@@ -98,11 +120,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserByUsername(String username) throws ServiceException{
+		
+		long start = System.currentTimeMillis();
 		String sql = "select * from user where username=:username";
 		try(Connection conn = sql2o.open()){
-			return conn.createQuery(sql, sql)
+			User user = conn.createQuery(sql, sql)
 			.addParameter("username", username)
 			.executeAndFetchFirst(User.class);
+			long end = System.currentTimeMillis();
+			log.info("execute {} : {}ms", "getUserByUsername", end-start);
+			return user;
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new ServiceException("通过用户名获取用户失败");
@@ -111,12 +138,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> getUsers(int page, int size) throws ServiceException {
+		
+		long start = System.currentTimeMillis();
 		String sql = "select * from user where status=0 limit :page, :size";
 		try (Connection conn = sql2o.open()){
-			return conn.createQuery(sql, sql)
+			List<User> users = conn.createQuery(sql, sql)
 				.addParameter("page", (page-1)*size)
 				.addParameter("size", size)
 				.executeAndFetch(User.class);
+			long end = System.currentTimeMillis();
+			log.info("execute {} : {}ms", "register", end-start);
+			return users;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ServiceException("获取用户列表失败");
@@ -125,12 +157,17 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<User> getAllUsers(int page, int size) throws ServiceException {
+		
+		long start = System.currentTimeMillis();
 		String sql = "select * from user limit :page, :size";
 		try (Connection conn = sql2o.open()){
-			return conn.createQuery(sql, sql)
+			List<User> users = conn.createQuery(sql, sql)
 				.addParameter("page", (page-1)*size)
 				.addParameter("size", size)
 				.executeAndFetch(User.class);
+			long end = System.currentTimeMillis();
+			log.info("execute {} : {}ms", "getAllUsers", end-start);
+			return users;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ServiceException("获取所有用户列表失败");
@@ -139,13 +176,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> searchUsername(String username, int page, int size) {
+		
+		long start = System.currentTimeMillis();
 		String sql = "select * from user where username like '%:username%' and status=0 limit :page, :size";
 		try (Connection conn = sql2o.open()){
-			return conn.createQuery(sql, sql)
+			List<User> users = conn.createQuery(sql, sql)
 				.addParameter("username", username)
 				.addParameter("page", (page-1)*size)
 				.addParameter("size", size)
 				.executeAndFetch(User.class);
+			long end = System.currentTimeMillis();
+			log.info("execute {} : {}ms", "searchUsername", end-start);
+			return users;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ServiceException("获取所有用户列表失败");
@@ -154,12 +196,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public long getUserTotal() throws ServiceException{
+		
+		long start = System.currentTimeMillis();
 		String total = cache.get("_user_total");
 		//如果缓存中没有数据,从数据库中获取
 		if(total == null){
 			try (Connection conn = sql2o.open()){
 				String sql = "select count(*) from user";
-				return conn.createQuery(sql, sql).executeScalar(Long.class);
+				long count = conn.createQuery(sql, sql).executeScalar(Long.class);
+				long end = System.currentTimeMillis();
+				log.info("execute {} : {}ms", "getUserTotal", end-start);
+				return count;
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new ServiceException("获取用户总数");
