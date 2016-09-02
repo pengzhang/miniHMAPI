@@ -3,7 +3,7 @@ package cn.hm55.platform.service;
 import java.util.List;
 
 import cn.hm55.platform.exception.ServiceException;
-import cn.hm55.platform.model.User;
+import cn.hm55.platform.model.user.User;
 
 public interface UserService {
 

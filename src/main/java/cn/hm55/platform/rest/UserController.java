@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import cn.hm55.platform.exception.JerseyException;
 import cn.hm55.platform.exception.ServiceException;
-import cn.hm55.platform.model.User;
+import cn.hm55.platform.model.user.User;
 import cn.hm55.platform.service.UserService;
 import cn.hm55.platform.util.cache.Cache;
 

@@ -1,5 +1,6 @@
 package cn.hm55.platform.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -12,7 +13,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 import cn.hm55.platform.exception.ServiceException;
-import cn.hm55.platform.model.User;
+import cn.hm55.platform.model.user.User;
 import cn.hm55.platform.service.UserService;
 import cn.hm55.platform.util.cache.Cache;
 
@@ -26,12 +27,12 @@ public class UserServiceImpl implements UserService {
 	private Cache cache;
 
 	private String user_info = "id, username, status";
-	
+
 	private Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-	
-	private void countExecuteTime(long start, String name){
+
+	private void countExecuteTime(long start, String name) {
 		long end = System.currentTimeMillis();
-		log.info("execute {} : {}ms", name, end - start);	
+		log.info("execute {} : {}ms", name, end - start);
 	}
 
 	@Override
@@ -44,9 +45,10 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String salt = RandomStringUtils.randomAlphanumeric(5);
-		String sql = "insert into user (username, password, salt) values (:username, :password, :salt)";
+		String sql = "insert into user (username, password, salt, create_date, update_date) values (:username, :password, :salt, :create_date, :update_date)";
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery(sql, sql).addParameter("username", username).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt).executeUpdate().commit();
+			conn.createQuery(sql, sql).addParameter("username", username).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt)
+					.addParameter("create_date", new Date()).addParameter("update_date", new Date()).executeUpdate().commit();
 			this.countExecuteTime(start, "register");
 			return true;
 		} catch (Exception e) {
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			// 判断密码是否相同
 			if (DigestUtils.md5Hex(password + user.getSalt()).equals(user.getPassword())) {
+				// TODO 用户登录日志
 				this.countExecuteTime(start, "login");
 				return true;
 			} else {
@@ -84,9 +87,10 @@ public class UserServiceImpl implements UserService {
 		} else {
 			// 重新生成密码salt
 			String salt = RandomStringUtils.randomAlphanumeric(5);
-			String sql = "update user set password=:password, salt=:salt where id=:id";
+			String sql = "update user set password=:password, salt=:salt, update_date=:update_date where id=:id";
 			try (Connection conn = sql2o.open()) {
-				conn.createQuery(sql, sql).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt).addParameter("id", userid).executeUpdate().commit();
+				conn.createQuery(sql, sql).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt).addParameter("update_date", new Date()).addParameter("id", userid)
+						.executeUpdate().commit();
 				this.countExecuteTime(start, "modifyPassword");
 				return true;
 			} catch (Exception e) {
