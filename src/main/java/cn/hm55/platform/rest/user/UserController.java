@@ -2,12 +2,14 @@ package cn.hm55.platform.rest.user;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +65,11 @@ public class UserController {
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public RestResponse login(User user) throws JerseyException {
+	public RestResponse login(User user, @Context HttpServletRequest request) throws JerseyException {
 		try {
-			userService.login(user.getUsername(), user.getPassword());
-			return new RestResponse(1, "登录成功");
+			long uid = userService.login(user.getUsername(), user.getPassword());
+			userService.loginLog(uid, request.getRemoteAddr(), request.getHeader("User-Agent"));
+			return new RestResponse(1, uid, "登录成功");
 		} catch (ServiceException se) {
 			throw new JerseyException(-1, se.getMessage());
 		} catch (Throwable t) {

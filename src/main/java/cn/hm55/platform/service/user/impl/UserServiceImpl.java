@@ -60,23 +60,45 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean login(String username, String password) throws ServiceException {
+	public long login(String username, String password) throws ServiceException {
 
 		long start = System.currentTimeMillis();
-		User user = getUserByUsername(username);
-		if (user == null || user.getStatus() != 0) {
-			throw new ServiceException("用户不存在或用户已被删除");
-		} else {
-			// 判断密码是否相同
-			if (DigestUtils.md5Hex(password + user.getSalt()).equals(user.getPassword())) {
-				// TODO 用户登录日志
-				this.countExecuteTime(start, "login");
-				return true;
+		String sql = "select * from user where username=:username";
+		try (Connection conn = sql2o.open()) {
+			User user = conn.createQuery(sql, sql).addParameter("username", username).executeAndFetchFirst(User.class);
+			if (user == null || user.getStatus() != 0) {
+				throw new ServiceException("用户不存在或用户已被删除");
 			} else {
-				throw new ServiceException("密码错误");
+				// 判断密码是否相同
+				if (DigestUtils.md5Hex(password + user.getSalt()).equals(user.getPassword())) {
+					this.countExecuteTime(start, "login");
+					return user.getId();
+				} else {
+					throw new ServiceException("密码错误");
+				}
 			}
+		} catch(ServiceException se){
+			throw new ServiceException(se.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException("登录失败");
 		}
-
+		
+	}
+	
+	@Override
+	public void loginLog(long uid, String ip, String device) {
+		
+		long start = System.currentTimeMillis();
+		String sql = "insert into user_login_log (uid, ip, device, create_date) values (:uid, :ip, :device, :create_date)";
+		try(Connection conn = sql2o.open()){
+			conn.createQuery(sql, sql).addParameter("uid", uid).addParameter("ip", ip).addParameter("device", device).addParameter("create_date", new Date()).executeUpdate();
+			this.countExecuteTime(start, "loginLog");
+		}catch(Exception e){
+			e.printStackTrace();
+			log.info("记录登录日志失败");
+		}
+		
 	}
 
 	@Override

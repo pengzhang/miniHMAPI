@@ -41,7 +41,6 @@ public class UserAccountController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse getUserScore(@PathParam("uid") long uid) throws JerseyException {
 		try {
-			System.out.println("===========" + uid);
 			long score = userAccountService.getUserScore(uid);
 			return new RestResponse(1, score, "获取用户积分成功");
 		} catch (Exception e) {

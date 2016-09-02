@@ -23,7 +23,16 @@ public interface UserService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public boolean login(String username, String password) throws ServiceException;
+	public long login(String username, String password) throws ServiceException;
+	
+	/**
+	 * 登录日志
+	 * @param uid
+	 * @param ip
+	 * @param device
+	 * @throws ServiceException
+	 */
+	public void loginLog(long uid, String ip, String device);
 	
 	/**
 	 * 修改密码

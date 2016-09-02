@@ -87,7 +87,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 			String sql = "select uid, score from user_account where uid = :uid";
 			UserAccount uscore = conn.createQuery(sql, sql).addParameter("uid", uid).executeAndFetchFirst(UserAccount.class);
 			if(uscore == null){
-				defaultUserAccount(uid);
+				uscore = defaultUserAccount(uid);
 			}
 			// 当前账户积分少于消费积分
 			if (score<0 && Math.abs(uscore.getScore()) < Math.abs(score)) {
@@ -99,7 +99,6 @@ public class UserAccountServiceImpl implements UserAccountService {
 
 				// 积分消费日志
 				String logSql = "insert into user_account_log (uid, operation, op_type, create_date) values (:uid, :operation, :op_type, :create_date)";
-				System.out.println(new String((cause + ",账户积分:" + (score > 0 ? "+" + score : score)).getBytes(), "utf-8"));
 				conn.createQuery(logSql, logSql).addParameter("uid", uid).addParameter("operation", new String((cause + ",账户积分:" + (score > 0 ? "+" + score : score)).getBytes(), "utf-8")).addParameter("op_type", 0).addParameter("create_date", new Date()).executeUpdate();
 
 			}
@@ -125,7 +124,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 			String sql = "select uid, account from user_account where uid = :uid";
 			UserAccount uaccount = conn.createQuery(sql, sql).addParameter("uid", uid).executeAndFetchFirst(UserAccount.class);
 			if(uaccount == null){
-				defaultUserAccount(uid);
+				uaccount = defaultUserAccount(uid);
 			}
 			// 当前账户余额少于消费余额
 			if (account < 0 && Math.abs(uaccount.getAccount()) < Math.abs(account)) {
@@ -170,7 +169,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 		}
 	}
 	
-	private void defaultUserAccount(long uid) throws ServiceException{
+	private UserAccount defaultUserAccount(long uid) throws ServiceException{
 		try (Connection conn = sql2o.beginTransaction()){
 			User user = userService.getUser(uid);
 			if(user == null){
@@ -178,6 +177,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 			}
 			String sql = "insert into user_account (uid, score, account) values (:uid, 0, 0)";
 			conn.createQuery(sql, sql).addParameter("uid", uid).executeUpdate().commit();
+			return new UserAccount(uid, 0, 0);
 		} catch (ServiceException se) {
 			throw new ServiceException(se.getMessage());
 		} catch (Exception e) {

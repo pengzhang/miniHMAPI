@@ -18,6 +18,13 @@ public class UserAccount {
 	private long account; //账户金额
 	private String cause;  //理由
 	
+	public UserAccount() {
+	}
+	public UserAccount(long uid, long score, long account) {
+		this.uid = uid;
+		this.score = score;
+		this.account = account;
+	}
 	public long getUid() {
 		return uid;
 	}
