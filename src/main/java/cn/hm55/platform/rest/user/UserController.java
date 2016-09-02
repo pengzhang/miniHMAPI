@@ -1,4 +1,4 @@
-package cn.hm55.platform.rest;
+package cn.hm55.platform.rest.user;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import cn.hm55.platform.exception.JerseyException;
 import cn.hm55.platform.exception.ServiceException;
 import cn.hm55.platform.model.user.User;
-import cn.hm55.platform.service.UserService;
-import cn.hm55.platform.util.cache.Cache;
+import cn.hm55.platform.rest.RestResponse;
+import cn.hm55.platform.service.user.UserService;
 
 @Path("/user")
 @Component
@@ -25,9 +25,6 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private Cache cache;
 
 	/**
 	 * @api {post} /api/user/register 用户注册
@@ -44,11 +41,7 @@ public class UserController {
 	public RestResponse register(User user) throws JerseyException {
 
 		try {
-			boolean flag = userService.register(user.getUsername(), user.getPassword());
-			if (flag) {
-				// 注册成功,缓存计用户总数
-				cache.incr("_user_total");
-			}
+			userService.register(user.getUsername(), user.getPassword());
 			return new RestResponse(1, "注册成功");
 		} catch (ServiceException se) {
 			throw new JerseyException(-1, se.getMessage());

@@ -1,4 +1,4 @@
-package cn.hm55.platform.service.impl;
+package cn.hm55.platform.service.user.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.sql2o.Sql2o;
 
 import cn.hm55.platform.exception.ServiceException;
 import cn.hm55.platform.model.user.User;
-import cn.hm55.platform.service.UserService;
+import cn.hm55.platform.service.user.UserService;
 import cn.hm55.platform.util.cache.Cache;
 
 @Component
@@ -49,6 +49,8 @@ public class UserServiceImpl implements UserService {
 		try (Connection conn = sql2o.open()) {
 			conn.createQuery(sql, sql).addParameter("username", username).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt)
 					.addParameter("create_date", new Date()).addParameter("update_date", new Date()).executeUpdate().commit();
+			// 注册成功,缓存计用户总数
+			cache.incr("_user_total");
 			this.countExecuteTime(start, "register");
 			return true;
 		} catch (Exception e) {
