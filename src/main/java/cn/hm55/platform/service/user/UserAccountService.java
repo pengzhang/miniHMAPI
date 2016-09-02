@@ -30,7 +30,7 @@ public interface UserAccountService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public boolean modifyUserScore(long uid, long score) throws ServiceException;
+	public boolean modifyUserScore(long uid, long score, String cause) throws ServiceException;
 	
 	/**
 	 * 修改账户金额
@@ -39,14 +39,15 @@ public interface UserAccountService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public boolean modifyUserAccount(long uid, long account) throws ServiceException; 
+	public boolean modifyUserAccount(long uid, long account, String cause) throws ServiceException; 
 	
 	/**
 	 * 用户账户和积分操作记录
 	 * @param uid
+	 * @param op_type
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<UserAccountLog> getUserAccountLog(long uid) throws ServiceException;
+	public List<UserAccountLog> getUserAccountLog(long uid, int op_type) throws ServiceException;
 
 }

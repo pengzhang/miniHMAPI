@@ -26,7 +26,7 @@
 			value="jdbc:mysql://115.29.106.112:3306/platform?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true" />
 		<property name="username" value="root" />
 		<property name="password" value="qixin123456" /> -->
-		<property name="url"
+	    <property name="url"
 			value="jdbc:mysql://127.0.0.1:3306/platform?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
@@ -35,7 +35,7 @@
 		<property name="maxActive" value="50" />
 		<property name="maxIdle" value="10" />
 		<property name="minIdle" value="0" />
-		<property name="defaultAutoCommit" value="false" />
+		<property name="defaultAutoCommit" value="true" />
 	</bean>
 	
 	<bean id="sql2o" class="org.sql2o.Sql2o">

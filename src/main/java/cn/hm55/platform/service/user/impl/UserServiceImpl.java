@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 		String sql = "insert into user (username, password, salt, create_date, update_date) values (:username, :password, :salt, :create_date, :update_date)";
 		try (Connection conn = sql2o.open()) {
 			conn.createQuery(sql, sql).addParameter("username", username).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt)
-					.addParameter("create_date", new Date()).addParameter("update_date", new Date()).executeUpdate().commit();
+					.addParameter("create_date", new Date()).addParameter("update_date", new Date()).executeUpdate();
 			// 注册成功,缓存计用户总数
 			cache.incr("_user_total");
 			this.countExecuteTime(start, "register");
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 			String sql = "update user set password=:password, salt=:salt, update_date=:update_date where id=:id";
 			try (Connection conn = sql2o.open()) {
 				conn.createQuery(sql, sql).addParameter("password", DigestUtils.md5Hex(password + salt)).addParameter("salt", salt).addParameter("update_date", new Date()).addParameter("id", userid)
-						.executeUpdate().commit();
+						.executeUpdate();
 				this.countExecuteTime(start, "modifyPassword");
 				return true;
 			} catch (Exception e) {
